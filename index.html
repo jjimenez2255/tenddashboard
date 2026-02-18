@@ -1,10 +1,12 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tend — $100M GTM Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600&family=Geist:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         @font-face {
             font-family: 'Geist';
@@ -22,1264 +24,1164 @@
             font-weight: 600;
         }
         @font-face {
-            font-family: 'Geist';
-            src: url('https://cdn.jsdelivr.net/npm/geist@1.0.0/dist/fonts/geist-sans/Geist-Bold.woff2') format('woff2');
-            font-weight: 700;
-        }
-        @font-face {
             font-family: 'Geist Mono';
             src: url('https://cdn.jsdelivr.net/npm/geist@1.0.0/dist/fonts/geist-mono/GeistMono-Regular.woff2') format('woff2');
             font-weight: 400;
         }
-        @font-face {
-            font-family: 'Geist Mono';
-            src: url('https://cdn.jsdelivr.net/npm/geist@1.0.0/dist/fonts/geist-mono/GeistMono-Medium.woff2') format('woff2');
+
+        :root {
+            --bg: #09090b;
+            --bg-elevated: #111113;
+            --bg-hover: #18181b;
+            --border: #27272a;
+            --border-light: #3f3f46;
+            --text: #fafafa;
+            --text-secondary: #a1a1aa;
+            --text-muted: #52525b;
+            --accent: #22c55e;
+            --accent-dim: rgba(34, 197, 94, 0.15);
+            --blue: #3b82f6;
+            --yellow: #eab308;
+            --red: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Geist', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Layout */
+        .dashboard {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 240px;
+            background: var(--bg-elevated);
+            border-right: 1px solid var(--border);
+            padding: 24px 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: 0 20px 24px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 16px;
+        }
+
+        .sidebar-logo {
+            font-family: 'Geist Mono', monospace;
+            font-size: 14px;
             font-weight: 500;
-        }
-
-```
-    :root {
-        --bg: #09090b;
-        --bg-elevated: #111113;
-        --bg-hover: #18181b;
-        --border: #27272a;
-        --border-light: #3f3f46;
-        --text: #fafafa;
-        --text-secondary: #a1a1aa;
-        --text-muted: #52525b;
-        --accent: #22c55e;
-        --accent-dim: rgba(34, 197, 94, 0.15);
-        --blue: #3b82f6;
-        --yellow: #eab308;
-        --red: #ef4444;
-    }
-
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-
-    body {
-        font-family: 'Geist', -apple-system, BlinkMacSystemFont, sans-serif;
-        background: var(--bg);
-        color: var(--text);
-        line-height: 1.5;
-        -webkit-font-smoothing: antialiased;
-    }
-
-    /* Layout */
-    .dashboard {
-        min-height: 100vh;
-    }
-
-    /* Top Header */
-    .top-header {
-        background: var(--bg-elevated);
-        border-bottom: 1px solid var(--border);
-        padding: 20px 32px 0;
-        position: sticky;
-        top: 0;
-        z-index: 100;
-    }
-
-    .header-row {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 20px;
-    }
-
-    .header-logo {
-        font-family: 'Geist Mono', monospace;
-        font-size: 16px;
-        font-weight: 600;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .header-logo::before {
-        content: '';
-        width: 8px;
-        height: 8px;
-        background: var(--accent);
-        border-radius: 2px;
-    }
-
-    .header-subtitle {
-        font-size: 12px;
-        color: var(--text-muted);
-        font-family: 'Geist Mono', monospace;
-    }
-
-    /* Tab Navigation */
-    .tab-nav {
-        display: flex;
-        gap: 8px;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
-        -ms-overflow-style: none;
-        padding-bottom: 16px;
-    }
-
-    .tab-nav::-webkit-scrollbar {
-        display: none;
-    }
-
-    .nav-item {
-        padding: 10px 18px;
-        color: var(--text-secondary);
-        text-decoration: none;
-        font-size: 13px;
-        font-weight: 500;
-        background: var(--bg);
-        border: 1px solid var(--border);
-        border-radius: 6px;
-        transition: all 0.15s;
-        cursor: pointer;
-        white-space: nowrap;
-        flex-shrink: 0;
-    }
-
-    .nav-item:hover {
-        color: var(--text);
-        background: var(--bg-hover);
-        border-color: var(--border-light);
-    }
-
-    .nav-item.active {
-        color: var(--bg);
-        background: var(--accent);
-        border-color: var(--accent);
-        font-weight: 600;
-    }
-
-    /* Main Content */
-    .main {
-        padding: 32px;
-        max-width: 1400px;
-        margin: 0 auto;
-    }
-
-    /* Mobile Optimizations */
-    @media (max-width: 768px) {
-        .top-header {
-            padding: 16px 16px 0;
-        }
-
-        .main {
-            padding: 20px 16px;
-        }
-
-        .nav-item {
-            padding: 10px 14px;
-            font-size: 12px;
-        }
-
-        /* Larger touch targets */
-        .nav-item {
-            min-height: 44px;
             display: flex;
             align-items: center;
+            gap: 10px;
         }
 
-        /* Better card spacing */
+        .sidebar-logo::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--accent);
+            border-radius: 2px;
+        }
+
+        .sidebar-subtitle {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 4px;
+            font-family: 'Geist Mono', monospace;
+        }
+
+        .nav-section {
+            padding: 0 12px;
+            margin-bottom: 24px;
+        }
+
+        .nav-section-title {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            padding: 0 8px;
+            margin-bottom: 8px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            border-radius: 6px;
+            transition: all 0.15s;
+            cursor: pointer;
+        }
+
+        .nav-item:hover {
+            background: var(--bg-hover);
+            color: var(--text);
+        }
+
+        .nav-item.active {
+            background: var(--accent-dim);
+            color: var(--accent);
+        }
+
+        .nav-item-icon {
+            width: 16px;
+            height: 16px;
+            opacity: 0.7;
+        }
+
+        /* Main Content */
+        .main {
+            flex: 1;
+            margin-left: 240px;
+            padding: 32px;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .section-header {
+            margin-bottom: 32px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+        }
+
+        .section-subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        /* Cards */
         .card {
-            padding: 20px 16px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            padding: 24px;
+            margin-bottom: 24px;
         }
 
-        /* Readable tables on mobile */
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-title::before {
+            content: '';
+            width: 3px;
+            height: 14px;
+            background: var(--accent);
+        }
+
+        .card-badge {
+            font-family: 'Geist Mono', monospace;
+            font-size: 11px;
+            padding: 4px 8px;
+            background: var(--accent-dim);
+            color: var(--accent);
+            border-radius: 4px;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            padding: 20px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            font-family: 'Geist Mono', monospace;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 600;
+            letter-spacing: -1px;
+        }
+
+        .stat-value.accent {
+            color: var(--accent);
+        }
+
+        .stat-change {
+            font-size: 12px;
+            color: var(--accent);
+            margin-top: 4px;
+            font-family: 'Geist Mono', monospace;
+        }
+
+        /* Tables */
         .table-container {
-            margin: 0 -16px;
-            padding: 0 16px;
             overflow-x: auto;
         }
 
         table {
-            min-width: 500px;
-        }
-
-        /* Stack stat cards nicely */
-        .stat-card {
-            padding: 16px;
-        }
-
-        .stat-value {
-            font-size: 28px;
-        }
-
-        /* Section headers */
-        .section-title {
-            font-size: 20px;
-        }
-
-        .section-header {
-            margin-bottom: 24px;
-        }
-
-        /* Timeline improvements */
-        .timeline {
-            padding-left: 20px;
-        }
-
-        /* Better list items */
-        .list-item {
-            padding: 12px 0;
-        }
-
-        .list-number {
-            font-size: 11px;
-        }
-
-        .list-content h4 {
+            width: 100%;
+            border-collapse: collapse;
             font-size: 13px;
         }
 
-        .list-content p {
-            font-size: 12px;
+        th {
+            text-align: left;
+            padding: 12px 16px;
+            background: var(--bg);
+            border-bottom: 1px solid var(--border);
+            font-weight: 600;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
         }
 
-        /* Code blocks scroll */
-        .code-block {
+        td {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        tr:hover td {
+            background: var(--bg-hover);
+        }
+
+        .highlight {
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        .money {
+            font-family: 'Geist Mono', monospace;
+            color: var(--accent);
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 4px 8px;
             font-size: 11px;
-            padding: 12px;
+            font-weight: 500;
+            border-radius: 4px;
+            font-family: 'Geist Mono', monospace;
+        }
+
+        .tag-green {
+            background: rgba(34, 197, 94, 0.15);
+            color: var(--accent);
+        }
+
+        .tag-blue {
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--blue);
+        }
+
+        .tag-yellow {
+            background: rgba(234, 179, 8, 0.15);
+            color: var(--yellow);
+        }
+
+        /* Grid layouts */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding-left: 24px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 7px;
+            top: 8px;
+            bottom: 8px;
+            width: 1px;
+            background: var(--border);
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: 24px;
+        }
+
+        .timeline-item:last-child {
+            padding-bottom: 0;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -20px;
+            top: 6px;
+            width: 10px;
+            height: 10px;
+            background: var(--bg);
+            border: 2px solid var(--accent);
+            border-radius: 50%;
+        }
+
+        .timeline-week {
+            font-family: 'Geist Mono', monospace;
+            font-size: 11px;
+            color: var(--accent);
+            margin-bottom: 4px;
+        }
+
+        .timeline-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .timeline-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        /* Funnel */
+        .funnel {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .funnel-stage {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .funnel-bar {
+            height: 40px;
+            background: var(--accent-dim);
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .funnel-value {
+            font-family: 'Geist Mono', monospace;
+            font-size: 13px;
+            color: var(--text-muted);
+            width: 80px;
+            text-align: right;
+        }
+
+        /* Progress bars */
+        .progress-bar {
+            height: 8px;
+            background: var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--accent);
+            border-radius: 4px;
+        }
+
+        /* List items */
+        .list-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .list-item:last-child {
+            border-bottom: none;
+        }
+
+        .list-number {
+            font-family: 'Geist Mono', monospace;
+            font-size: 12px;
+            color: var(--accent);
+            width: 24px;
+            flex-shrink: 0;
+        }
+
+        .list-content h4 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .list-content p {
+            font-size: 13px;
+            color: var(--text-secondary);
         }
 
         /* Quote blocks */
         .quote-block {
-            padding-left: 12px;
+            border-left: 2px solid var(--accent);
+            padding-left: 16px;
+            margin: 16px 0;
         }
 
         .quote-text {
+            font-style: italic;
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .quote-source {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* Code blocks */
+        .code-block {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            padding: 16px;
+            font-family: 'Geist Mono', monospace;
             font-size: 13px;
+            color: var(--text-secondary);
+            overflow-x: auto;
         }
 
-        /* Funnel bars */
-        .funnel-stage {
-            gap: 12px;
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .grid-2, .grid-3 {
+                grid-template-columns: 1fr;
+            }
         }
 
-        .funnel-bar {
-            height: 36px;
-            font-size: 12px;
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+
+            .main {
+                margin-left: 0;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
         }
-
-        .funnel-value {
-            font-size: 12px;
-            width: 60px;
-        }
-
-        /* Grid adjustments */
-        .grid-2, .grid-3 {
-            gap: 16px;
-        }
-
-        .stats-grid {
-            gap: 12px;
-        }
-    }
-
-    .section {
-        display: none;
-    }
-
-    .section.active {
-        display: block;
-    }
-
-    .section-header {
-        margin-bottom: 32px;
-    }
-
-    .section-title {
-        font-size: 24px;
-        font-weight: 600;
-        letter-spacing: -0.5px;
-        margin-bottom: 8px;
-    }
-
-    .section-subtitle {
-        font-size: 14px;
-        color: var(--text-secondary);
-    }
-
-    /* Cards */
-    .card {
-        background: var(--bg-elevated);
-        border: 1px solid var(--border);
-        padding: 24px;
-        margin-bottom: 24px;
-    }
-
-    .card-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 20px;
-    }
-
-    .card-title {
-        font-size: 14px;
-        font-weight: 600;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-
-    .card-title::before {
-        content: '';
-        width: 3px;
-        height: 14px;
-        background: var(--accent);
-    }
-
-    .card-badge {
-        font-family: 'Geist Mono', monospace;
-        font-size: 11px;
-        padding: 4px 8px;
-        background: var(--accent-dim);
-        color: var(--accent);
-        border-radius: 4px;
-    }
-
-    /* Stats Grid */
-    .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 16px;
-        margin-bottom: 32px;
-    }
-
-    .stat-card {
-        background: var(--bg-elevated);
-        border: 1px solid var(--border);
-        padding: 20px;
-    }
-
-    .stat-label {
-        font-size: 12px;
-        color: var(--text-muted);
-        margin-bottom: 8px;
-        font-family: 'Geist Mono', monospace;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-
-    .stat-value {
-        font-size: 32px;
-        font-weight: 600;
-        letter-spacing: -1px;
-    }
-
-    .stat-value.accent {
-        color: var(--accent);
-    }
-
-    .stat-change {
-        font-size: 12px;
-        color: var(--accent);
-        margin-top: 4px;
-        font-family: 'Geist Mono', monospace;
-    }
-
-    /* Tables */
-    .table-container {
-        overflow-x: auto;
-    }
-
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 13px;
-    }
-
-    th {
-        text-align: left;
-        padding: 12px 16px;
-        background: var(--bg);
-        border-bottom: 1px solid var(--border);
-        font-weight: 600;
-        font-size: 11px;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        color: var(--text-muted);
-    }
-
-    td {
-        padding: 14px 16px;
-        border-bottom: 1px solid var(--border);
-        color: var(--text-secondary);
-    }
-
-    tr:hover td {
-        background: var(--bg-hover);
-    }
-
-    .highlight {
-        color: var(--text);
-        font-weight: 500;
-    }
-
-    .money {
-        font-family: 'Geist Mono', monospace;
-        color: var(--accent);
-    }
-
-    .tag {
-        display: inline-block;
-        padding: 4px 8px;
-        font-size: 11px;
-        font-weight: 500;
-        border-radius: 4px;
-        font-family: 'Geist Mono', monospace;
-    }
-
-    .tag-green {
-        background: rgba(34, 197, 94, 0.15);
-        color: var(--accent);
-    }
-
-    .tag-blue {
-        background: rgba(59, 130, 246, 0.15);
-        color: var(--blue);
-    }
-
-    .tag-yellow {
-        background: rgba(234, 179, 8, 0.15);
-        color: var(--yellow);
-    }
-
-    /* Grid layouts */
-    .grid-2 {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 24px;
-    }
-
-    .grid-3 {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 24px;
-    }
-
-    /* Timeline */
-    .timeline {
-        position: relative;
-        padding-left: 24px;
-    }
-
-    .timeline::before {
-        content: '';
-        position: absolute;
-        left: 7px;
-        top: 8px;
-        bottom: 8px;
-        width: 1px;
-        background: var(--border);
-    }
-
-    .timeline-item {
-        position: relative;
-        padding-bottom: 24px;
-    }
-
-    .timeline-item:last-child {
-        padding-bottom: 0;
-    }
-
-    .timeline-item::before {
-        content: '';
-        position: absolute;
-        left: -20px;
-        top: 6px;
-        width: 10px;
-        height: 10px;
-        background: var(--bg);
-        border: 2px solid var(--accent);
-        border-radius: 50%;
-    }
-
-    .timeline-week {
-        font-family: 'Geist Mono', monospace;
-        font-size: 11px;
-        color: var(--accent);
-        margin-bottom: 4px;
-    }
-
-    .timeline-title {
-        font-weight: 600;
-        margin-bottom: 4px;
-    }
-
-    .timeline-desc {
-        font-size: 13px;
-        color: var(--text-secondary);
-    }
-
-    /* Funnel */
-    .funnel {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-    }
-
-    .funnel-stage {
-        display: flex;
-        align-items: center;
-        gap: 16px;
-    }
-
-    .funnel-bar {
-        height: 40px;
-        background: var(--accent-dim);
-        display: flex;
-        align-items: center;
-        padding: 0 16px;
-        font-size: 13px;
-        font-weight: 500;
-    }
-
-    .funnel-value {
-        font-family: 'Geist Mono', monospace;
-        font-size: 13px;
-        color: var(--text-muted);
-        width: 80px;
-        text-align: right;
-    }
-
-    /* Progress bars */
-    .progress-bar {
-        height: 8px;
-        background: var(--border);
-        border-radius: 4px;
-        overflow: hidden;
-    }
-
-    .progress-fill {
-        height: 100%;
-        background: var(--accent);
-        border-radius: 4px;
-    }
-
-    /* List items */
-    .list-item {
-        display: flex;
-        align-items: flex-start;
-        gap: 12px;
-        padding: 16px 0;
-        border-bottom: 1px solid var(--border);
-    }
-
-    .list-item:last-child {
-        border-bottom: none;
-    }
-
-    .list-number {
-        font-family: 'Geist Mono', monospace;
-        font-size: 12px;
-        color: var(--accent);
-        width: 24px;
-        flex-shrink: 0;
-    }
-
-    .list-content h4 {
-        font-size: 14px;
-        font-weight: 600;
-        margin-bottom: 4px;
-    }
-
-    .list-content p {
-        font-size: 13px;
-        color: var(--text-secondary);
-    }
-
-    /* Quote blocks */
-    .quote-block {
-        border-left: 2px solid var(--accent);
-        padding-left: 16px;
-        margin: 16px 0;
-    }
-
-    .quote-text {
-        font-style: italic;
-        color: var(--text-secondary);
-        font-size: 14px;
-        margin-bottom: 8px;
-    }
-
-    .quote-source {
-        font-size: 12px;
-        color: var(--text-muted);
-    }
-
-    /* Code blocks */
-    .code-block {
-        background: var(--bg);
-        border: 1px solid var(--border);
-        padding: 16px;
-        font-family: 'Geist Mono', monospace;
-        font-size: 13px;
-        color: var(--text-secondary);
-        overflow-x: auto;
-    }
-
-    /* Responsive */
-    @media (max-width: 1024px) {
-        .stats-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
-
-        .grid-2, .grid-3 {
-            grid-template-columns: 1fr;
-        }
-    }
-
-    @media (max-width: 768px) {
-        .stats-grid {
-            grid-template-columns: 1fr;
-        }
-    }
-</style>
-```
-
+    </style>
 </head>
 <body>
     <div class="dashboard">
-        <!-- Top Header -->
-        <header class="top-header">
-            <div class="header-row">
-                <div>
-                    <div class="header-logo">tend</div>
-                    <div class="header-subtitle">$100M GTM Dashboard</div>
-                </div>
-            </div>
-            <nav class="tab-nav">
-                <a class="nav-item active" data-section="overview">Overview</a>
-                <a class="nav-item" data-section="product">Product Tiers</a>
-                <a class="nav-item" data-section="channels">GTM Channels</a>
-                <a class="nav-item" data-section="ninety-day">90-Day Plan</a>
-                <a class="nav-item" data-section="sales">Sales Playbook</a>
-                <a class="nav-item" data-section="ad-creative">Ad Creative</a>
-                <a class="nav-item" data-section="metrics">Metrics</a>
-            </nav>
-        </header>
-
-```
-    <!-- Main Content -->
-    <main class="main">
-        <!-- Overview Section -->
-        <section id="overview" class="section active">
-            <div class="section-header">
-                <h1 class="section-title">Overview</h1>
-                <p class="section-subtitle">Tend: Install AI into local businesses. $100M in 24 months.</p>
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">tend</div>
+                <div class="sidebar-subtitle">$100M GTM Dashboard</div>
             </div>
 
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-label">2-Year Target</div>
-                    <div class="stat-value accent">$100M</div>
-                    <div class="stat-change">ARR by Month 24</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">Year 1 Target</div>
-                    <div class="stat-value">$18M</div>
-                    <div class="stat-change">Mix: SMB + Mid + Enterprise</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">Year 2 Target</div>
-                    <div class="stat-value">$82M</div>
-                    <div class="stat-change">Scale via licensing</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">Avg Deal Size</div>
-                    <div class="stat-value">$8.4K</div>
-                    <div class="stat-change">Blended annual</div>
-                </div>
+            <div class="nav-section">
+                <div class="nav-section-title">Strategy</div>
+                <a class="nav-item active" data-section="overview">
+                    <span>—</span> Overview
+                </a>
+                <a class="nav-item" data-section="product">
+                    <span>—</span> Product Tiers
+                </a>
+                <a class="nav-item" data-section="channels">
+                    <span>—</span> GTM Channels
+                </a>
             </div>
 
-            <div class="grid-2">
+            <div class="nav-section">
+                <div class="nav-section-title">Execution</div>
+                <a class="nav-item" data-section="ninety-day">
+                    <span>—</span> 90-Day Plan
+                </a>
+                <a class="nav-item" data-section="sales">
+                    <span>—</span> Sales Playbook
+                </a>
+                <a class="nav-item" data-section="ad-creative">
+                    <span>—</span> Ad Creative
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Metrics</div>
+                <a class="nav-item" data-section="metrics">
+                    <span>—</span> KPIs & Targets
+                </a>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main">
+            <!-- Overview Section -->
+            <section id="overview" class="section active">
+                <div class="section-header">
+                    <h1 class="section-title">Overview</h1>
+                    <p class="section-subtitle">Tend: Install AI into local businesses. $100M in 24 months.</p>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">2-Year Target</div>
+                        <div class="stat-value accent">$100M</div>
+                        <div class="stat-change">ARR by Month 24</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Year 1 Target</div>
+                        <div class="stat-value">$18M</div>
+                        <div class="stat-change">Mix: SMB + Mid + Enterprise</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Year 2 Target</div>
+                        <div class="stat-value">$82M</div>
+                        <div class="stat-change">Scale via licensing</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Avg Deal Size</div>
+                        <div class="stat-value">$8.4K</div>
+                        <div class="stat-change">Blended annual</div>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Revenue Model</div>
+                            <span class="card-badge">24 MONTHS</span>
+                        </div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Stream</th>
+                                    <th>Year 1</th>
+                                    <th>Year 2</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="highlight">SMB Installs</td>
+                                    <td class="money">$3M</td>
+                                    <td class="money">$12M</td>
+                                    <td class="money">$15M</td>
+                                </tr>
+                                <tr>
+                                    <td class="highlight">Mid-Market</td>
+                                    <td class="money">$5M</td>
+                                    <td class="money">$20M</td>
+                                    <td class="money">$25M</td>
+                                </tr>
+                                <tr>
+                                    <td class="highlight">Enterprise</td>
+                                    <td class="money">$6M</td>
+                                    <td class="money">$30M</td>
+                                    <td class="money">$36M</td>
+                                </tr>
+                                <tr>
+                                    <td class="highlight">Installer Licensing</td>
+                                    <td class="money">$2M</td>
+                                    <td class="money">$12M</td>
+                                    <td class="money">$14M</td>
+                                </tr>
+                                <tr>
+                                    <td class="highlight">Managed Services</td>
+                                    <td class="money">$2M</td>
+                                    <td class="money">$8M</td>
+                                    <td class="money">$10M</td>
+                                </tr>
+                                <tr style="background: var(--bg);">
+                                    <td class="highlight" style="color: var(--accent);">TOTAL</td>
+                                    <td class="money" style="font-weight: 600;">$18M</td>
+                                    <td class="money" style="font-weight: 600;">$82M</td>
+                                    <td class="money" style="font-weight: 600;">$100M</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">The Thesis</div>
+                        </div>
+                        <div class="list-item">
+                            <div class="list-number">01</div>
+                            <div class="list-content">
+                                <h4>Nobody is installing AI for SMBs</h4>
+                                <p>ChatGPT exists. But no one is setting it up to run a dentist's scheduling or an HVAC company's invoicing. We do.</p>
+                            </div>
+                        </div>
+                        <div class="list-item">
+                            <div class="list-number">02</div>
+                            <div class="list-content">
+                                <h4>Physical = Trust</h4>
+                                <p>A box you can see beats a "platform" you can't explain. Local business owners buy tangible.</p>
+                            </div>
+                        </div>
+                        <div class="list-item">
+                            <div class="list-number">03</div>
+                            <div class="list-content">
+                                <h4>Local-first scales via licensing</h4>
+                                <p>Train installers. Franchise the playbook. 100 installers × 10 installs/month = $24M ARR.</p>
+                            </div>
+                        </div>
+                        <div class="list-item">
+                            <div class="list-number">04</div>
+                            <div class="list-content">
+                                <h4>Enterprise is the multiplier</h4>
+                                <p>Same product, bigger contracts. Multi-location medical groups, franchise HQs, regional chains.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="card">
                     <div class="card-header">
-                        <div class="card-title">Revenue Model</div>
-                        <span class="card-badge">24 MONTHS</span>
+                        <div class="card-title">24-Month Revenue Trajectory</div>
                     </div>
-                    <div class="table-container"><table>
+                    <table>
                         <thead>
                             <tr>
-                                <th>Stream</th>
-                                <th>Year 1</th>
-                                <th>Year 2</th>
-                                <th>Total</th>
+                                <th>Milestone</th>
+                                <th>Month</th>
+                                <th>Cumulative ARR</th>
+                                <th>Key Driver</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td class="highlight">SMB Installs</td>
-                                <td class="money">$3M</td>
-                                <td class="money">$12M</td>
-                                <td class="money">$15M</td>
+                                <td class="highlight">First 10 Installs</td>
+                                <td>Month 2</td>
+                                <td class="money">$29K</td>
+                                <td>Founder-led sales, local network</td>
                             </tr>
                             <tr>
-                                <td class="highlight">Mid-Market</td>
-                                <td class="money">$5M</td>
-                                <td class="money">$20M</td>
-                                <td class="money">$25M</td>
+                                <td class="highlight">First Enterprise Deal</td>
+                                <td>Month 4</td>
+                                <td class="money">$250K</td>
+                                <td>Multi-location medical group</td>
                             </tr>
                             <tr>
-                                <td class="highlight">Enterprise</td>
+                                <td class="highlight">50 Active Installs</td>
+                                <td>Month 6</td>
+                                <td class="money">$800K</td>
+                                <td>Paid ads + referrals online</td>
+                            </tr>
+                            <tr>
+                                <td class="highlight">First Licensed Installer</td>
+                                <td>Month 8</td>
+                                <td class="money">$2M</td>
+                                <td>Playbook documented, training live</td>
+                            </tr>
+                            <tr>
+                                <td class="highlight">10 Licensed Installers</td>
+                                <td>Month 12</td>
                                 <td class="money">$6M</td>
+                                <td>Each doing 5 installs/month</td>
+                            </tr>
+                            <tr>
+                                <td class="highlight">50 Licensed Installers</td>
+                                <td>Month 18</td>
                                 <td class="money">$30M</td>
-                                <td class="money">$36M</td>
+                                <td>National coverage, vertical specialization</td>
                             </tr>
                             <tr>
-                                <td class="highlight">Installer Licensing</td>
-                                <td class="money">$2M</td>
-                                <td class="money">$12M</td>
-                                <td class="money">$14M</td>
+                                <td class="highlight">100 Installers + Enterprise</td>
+                                <td>Month 24</td>
+                                <td class="money">$100M</td>
+                                <td>Full model operational</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Product Tiers Section -->
+            <section id="product" class="section">
+                <div class="section-header">
+                    <h1 class="section-title">Product Tiers</h1>
+                    <p class="section-subtitle">Three tiers: SMB, Mid-Market, Enterprise. Same core product, different scope.</p>
+                </div>
+
+                <div class="grid-3">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">SMB</div>
+                            <span class="card-badge">$500 + $200/MO</span>
+                        </div>
+                        <p style="color: var(--text-secondary); font-size: 13px; margin-bottom: 16px;">Single-location businesses with 1-10 employees. Coffee shops, salons, solo law offices, trades.</p>
+                        <div class="list-item" style="padding-top: 0;">
+                            <div class="list-content">
+                                <h4>What's Included</h4>
+                                <p>• 30-min workflow audit<br>• 3-5 core automations<br>• Calendar + invoicing + follow-ups<br>• Email/text support<br>• Dashboard access</p>
+                            </div>
+                        </div>
+                        <div class="list-item">
+                            <div class="list-content">
+                                <h4>Annual Value</h4>
+                                <p class="money" style="font-size: 18px;">$2,900/year</p>
+                            </div>
+                        </div>
+                        <div class="list-item" style="border-bottom: none;">
+                            <div class="list-content">
+                                <h4>Target Volume</h4>
+                                <p>5,000 installs by Month 24</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card" style="border-color: var(--accent);">
+                        <div class="card-header">
+                            <div class="card-title">Mid-Market</div>
+                            <span class="card-badge">$2,500 + $500/MO</span>
+                        </div>
+                        <p style="color: var(--text-secondary); font-size: 13px; margin-bottom: 16px;">Multi-location or 10-50 employees. Regional dental groups, restaurant chains, multi-office law firms.</p>
+                        <div class="list-item" style="padding-top: 0;">
+                            <div class="list-content">
+                                <h4>What's Included</h4>
+                                <p>• Full workflow audit (2 hrs)<br>• 10+ automations<br>• Custom integrations<br>• Multi-location sync<br>• Priority support<br>• Quarterly reviews</p>
+                            </div>
+                        </div>
+                        <div class="list-item">
+                            <div class="list-content">
+                                <h4>Annual Value</h4>
+                                <p class="money" style="font-size: 18px;">$8,500/year</p>
+                            </div>
+                        </div>
+                        <div class="list-item" style="border-bottom: none;">
+                            <div class="list-content">
+                                <h4>Target Volume</h4>
+                                <p>2,000 installs by Month 24</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Enterprise</div>
+                            <span class="card-badge">CUSTOM PRICING</span>
+                        </div>
+                        <p style="color: var(--text-secondary); font-size: 13px; margin-bottom: 16px;">50+ locations or franchise HQs. Hospital networks, national chains, PE-backed roll-ups.</p>
+                        <div class="list-item" style="padding-top: 0;">
+                            <div class="list-content">
+                                <h4>What's Included</h4>
+                                <p>• Enterprise audit + roadmap<br>• Unlimited automations<br>• Custom development<br>• Dedicated account manager<br>• SLA guarantees<br>• On-site training</p>
+                            </div>
+                        </div>
+                        <div class="list-item">
+                            <div class="list-content">
+                                <h4>Annual Value</h4>
+                                <p class="money" style="font-size: 18px;">$50K-500K/year</p>
+                            </div>
+                        </div>
+                        <div class="list-item" style="border-bottom: none;">
+                            <div class="list-content">
+                                <h4>Target Volume</h4>
+                                <p>100 enterprise deals by Month 24</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Installer Licensing Model</div>
+                        <span class="card-badge">SCALE ENGINE</span>
+                    </div>
+                    <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 20px;">Train local technicians to become certified Tend installers. They sell, install, and support. We provide the platform, training, and leads.</p>
+                    <div class="grid-2">
+                        <div>
+                            <h4 style="margin-bottom: 12px;">Installer Economics</h4>
+                            <table>
+                                <tr>
+                                    <td>License fee</td>
+                                    <td class="money">$5,000/year</td>
+                                </tr>
+                                <tr>
+                                    <td>Revenue share (setup)</td>
+                                    <td>60% to installer</td>
+                                </tr>
+                                <tr>
+                                    <td>Revenue share (monthly)</td>
+                                    <td>40% to installer</td>
+                                </tr>
+                                <tr>
+                                    <td>Target installs/mo</td>
+                                    <td>10 per installer</td>
+                                </tr>
+                                <tr>
+                                    <td>Installer annual income</td>
+                                    <td class="money">$120K-180K</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div>
+                            <h4 style="margin-bottom: 12px;">What Installers Get</h4>
+                            <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.8;">
+                                • Full training program (40 hrs)<br>
+                                • Certification + badge<br>
+                                • Lead generation support<br>
+                                • Sales materials + scripts<br>
+                                • Technical support hotline<br>
+                                • Exclusive territory (optional)<br>
+                                • Monthly installer calls
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- GTM Channels Section -->
+            <section id="channels" class="section">
+                <div class="section-header">
+                    <h1 class="section-title">GTM Channels</h1>
+                    <p class="section-subtitle">Multi-channel approach: Local-first for SMB, outbound for Mid-Market, strategic for Enterprise.</p>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Year 1 CAC Target</div>
+                        <div class="stat-value">$400</div>
+                        <div class="stat-change">SMB blended</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Year 1 LTV:CAC</div>
+                        <div class="stat-value accent">7:1</div>
+                        <div class="stat-change">Target ratio</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Marketing Budget Y1</div>
+                        <div class="stat-value">$1.2M</div>
+                        <div class="stat-change">~7% of revenue</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Sales Team Y1</div>
+                        <div class="stat-value">8</div>
+                        <div class="stat-change">Founders + 6 reps</div>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">SMB Channels</div>
+                            <span class="card-badge">60% OF VOLUME</span>
+                        </div>
+                        <div class="list-item">
+                            <div class="list-number">01</div>
+                            <div class="list-content">
+                                <h4>Local Paid Ads</h4>
+                                <p>Facebook/Instagram + Google Local Services. Geo-targeted to specific metros. "Install AI into your business" creative.</p>
+                            </div>
+                        </div>
+                        <div class="list-item">
+                            <div class="list-number">02</div>
+                            <div class="list-content">
+                                <h4>Door-to-Door</h4>
+                                <p>Installers walk strip malls, office parks. Demo on iPad. Book install on the spot. Works for trades, salons, restaurants.</p>
+                            </div>
+                        </div>
+                        <div class="list-item">
+                            <div class="list-number">03</div>
+                            <div class="list-content">
+                                <h4>Referrals</h4>
+                                <p>$200 credit per referral. Happy customers tell their business friends. Dental → dental, HVAC → plumber.</p>
+                            </div>
+                        </div>
+                        <div class="list-item">
+                            <div class="list-number">04</div>
+                            <div class="list-content">
+                                <h4>Local Partnerships</h4>
+                                <p>Chamber of Commerce, BNI groups, local accountants/bookkeepers. They recommend, we install.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Mid-Market & Enterprise</div>
+                            <span class="card-badge">40% OF REVENUE</span>
+                        </div>
+                        <div class="list-item">
+                            <div class="list-number">01</div>
+                            <div class="list-content">
+                                <h4>Outbound Sales</h4>
+                                <p>SDRs target multi-location operators. LinkedIn + email sequences. "We installed AI for [competitor], saved them 200 hrs/month."</p>
+                            </div>
+                        </div>
+                        <div class="list-item">
+                            <div class="list-number">02</div>
+                            <div class="list-content">
+                                <h4>Vertical Conferences</h4>
+                                <p>Dental conferences, restaurant shows, franchise expos. Booth + speaking + demos. High-intent buyers.</p>
+                            </div>
+                        </div>
+                        <div class="list-item">
+                            <div class="list-number">03</div>
+                            <div class="list-content">
+                                <h4>PE/VC Partnerships</h4>
+                                <p>Partner with PE firms doing healthcare/services roll-ups. Become the "AI layer" they add post-acquisition.</p>
+                            </div>
+                        </div>
+                        <div class="list-item">
+                            <div class="list-number">04</div>
+                            <div class="list-content">
+                                <h4>Case Study Marketing</h4>
+                                <p>Detailed ROI case studies. "How [Dental Group] saved $400K/year with Tend." Gated content → sales call.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Channel Budget Allocation — Year 1</div>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Channel</th>
+                                <th>Budget</th>
+                                <th>Expected Deals</th>
+                                <th>CAC</th>
+                                <th>Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="highlight">Paid Ads (Local)</td>
+                                <td class="money">$400K</td>
+                                <td>800</td>
+                                <td class="money">$500</td>
+                                <td>FB/IG + Google LSA</td>
                             </tr>
                             <tr>
-                                <td class="highlight">Managed Services</td>
-                                <td class="money">$2M</td>
-                                <td class="money">$8M</td>
-                                <td class="money">$10M</td>
+                                <td class="highlight">Installer Network</td>
+                                <td class="money">$200K</td>
+                                <td>600</td>
+                                <td class="money">$333</td>
+                                <td>Training + support costs</td>
+                            </tr>
+                            <tr>
+                                <td class="highlight">Referrals</td>
+                                <td class="money">$100K</td>
+                                <td>400</td>
+                                <td class="money">$250</td>
+                                <td>$200 credit per referral</td>
+                            </tr>
+                            <tr>
+                                <td class="highlight">Outbound Sales</td>
+                                <td class="money">$300K</td>
+                                <td>50</td>
+                                <td class="money">$6,000</td>
+                                <td>Mid-market + enterprise</td>
+                            </tr>
+                            <tr>
+                                <td class="highlight">Events/Conferences</td>
+                                <td class="money">$150K</td>
+                                <td>30</td>
+                                <td class="money">$5,000</td>
+                                <td>Enterprise pipeline</td>
+                            </tr>
+                            <tr>
+                                <td class="highlight">Content/SEO</td>
+                                <td class="money">$50K</td>
+                                <td>100</td>
+                                <td class="money">$500</td>
+                                <td>Long-term inbound</td>
                             </tr>
                             <tr style="background: var(--bg);">
                                 <td class="highlight" style="color: var(--accent);">TOTAL</td>
-                                <td class="money" style="font-weight: 600;">$18M</td>
-                                <td class="money" style="font-weight: 600;">$82M</td>
-                                <td class="money" style="font-weight: 600;">$100M</td>
+                                <td class="money" style="font-weight: 600;">$1.2M</td>
+                                <td style="font-weight: 600;">1,980</td>
+                                <td class="money" style="font-weight: 600;">$606 avg</td>
+                                <td></td>
                             </tr>
                         </tbody>
-                    </table></div>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 90-Day Plan Section -->
+            <section id="ninety-day" class="section">
+                <div class="section-header">
+                    <h1 class="section-title">90-Day Plan</h1>
+                    <p class="section-subtitle">From zero to 25 installs. First vertical proven. First case study published.</p>
                 </div>
 
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">The Thesis</div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Day 90 Target</div>
+                        <div class="stat-value accent">25</div>
+                        <div class="stat-change">Active installs</div>
                     </div>
-                    <div class="list-item">
-                        <div class="list-number">01</div>
-                        <div class="list-content">
-                            <h4>Nobody is installing AI for SMBs</h4>
-                            <p>ChatGPT exists. But no one is setting it up to run a dentist's scheduling or an HVAC company's invoicing. We do.</p>
-                        </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Day 90 MRR</div>
+                        <div class="stat-value">$7.5K</div>
+                        <div class="stat-change">25 × $300 avg</div>
                     </div>
-                    <div class="list-item">
-                        <div class="list-number">02</div>
-                        <div class="list-content">
-                            <h4>Physical = Trust</h4>
-                            <p>A box you can see beats a "platform" you can't explain. Local business owners buy tangible.</p>
-                        </div>
+                    <div class="stat-card">
+                        <div class="stat-label">First Vertical</div>
+                        <div class="stat-value">Dental</div>
+                        <div class="stat-change">Highest pain, clear ROI</div>
                     </div>
-                    <div class="list-item">
-                        <div class="list-number">03</div>
-                        <div class="list-content">
-                            <h4>Local-first scales via licensing</h4>
-                            <p>Train installers. Franchise the playbook. 100 installers × 10 installs/month = $24M ARR.</p>
-                        </div>
-                    </div>
-                    <div class="list-item">
-                        <div class="list-number">04</div>
-                        <div class="list-content">
-                            <h4>Enterprise is the multiplier</h4>
-                            <p>Same product, bigger contracts. Multi-location medical groups, franchise HQs, regional chains.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">24-Month Revenue Trajectory</div>
-                </div>
-                <div class="table-container"><table>
-                    <thead>
-                        <tr>
-                            <th>Milestone</th>
-                            <th>Month</th>
-                            <th>Cumulative ARR</th>
-                            <th>Key Driver</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="highlight">First 10 Installs</td>
-                            <td>Month 2</td>
-                            <td class="money">$29K</td>
-                            <td>Founder-led sales, local network</td>
-                        </tr>
-                        <tr>
-                            <td class="highlight">First Enterprise Deal</td>
-                            <td>Month 4</td>
-                            <td class="money">$250K</td>
-                            <td>Multi-location medical group</td>
-                        </tr>
-                        <tr>
-                            <td class="highlight">50 Active Installs</td>
-                            <td>Month 6</td>
-                            <td class="money">$800K</td>
-                            <td>Paid ads + referrals online</td>
-                        </tr>
-                        <tr>
-                            <td class="highlight">First Licensed Installer</td>
-                            <td>Month 8</td>
-                            <td class="money">$2M</td>
-                            <td>Playbook documented, training live</td>
-                        </tr>
-                        <tr>
-                            <td class="highlight">10 Licensed Installers</td>
-                            <td>Month 12</td>
-                            <td class="money">$6M</td>
-                            <td>Each doing 5 installs/month</td>
-                        </tr>
-                        <tr>
-                            <td class="highlight">50 Licensed Installers</td>
-                            <td>Month 18</td>
-                            <td class="money">$30M</td>
-                            <td>National coverage, vertical specialization</td>
-                        </tr>
-                        <tr>
-                            <td class="highlight">100 Installers + Enterprise</td>
-                            <td>Month 24</td>
-                            <td class="money">$100M</td>
-                            <td>Full model operational</td>
-                        </tr>
-                    </tbody>
-                </table></div>
-            </div>
-        </section>
-
-        <!-- Product Tiers Section -->
-        <section id="product" class="section">
-            <div class="section-header">
-                <h1 class="section-title">Product Tiers</h1>
-                <p class="section-subtitle">Three tiers: SMB, Mid-Market, Enterprise. Same core product, different scope.</p>
-            </div>
-
-            <div class="grid-3">
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">SMB</div>
-                        <span class="card-badge">$500 + $200/MO</span>
-                    </div>
-                    <p style="color: var(--text-secondary); font-size: 13px; margin-bottom: 16px;">Single-location businesses with 1-10 employees. Coffee shops, salons, solo law offices, trades.</p>
-                    <div class="list-item" style="padding-top: 0;">
-                        <div class="list-content">
-                            <h4>What's Included</h4>
-                            <p>• 30-min workflow audit<br>• 3-5 core automations<br>• Calendar + invoicing + follow-ups<br>• Email/text support<br>• Dashboard access</p>
-                        </div>
-                    </div>
-                    <div class="list-item">
-                        <div class="list-content">
-                            <h4>Annual Value</h4>
-                            <p class="money" style="font-size: 18px;">$2,900/year</p>
-                        </div>
-                    </div>
-                    <div class="list-item" style="border-bottom: none;">
-                        <div class="list-content">
-                            <h4>Target Volume</h4>
-                            <p>5,000 installs by Month 24</p>
-                        </div>
+                    <div class="stat-card">
+                        <div class="stat-label">First Market</div>
+                        <div class="stat-value">DFW</div>
+                        <div class="stat-change">Home base, network</div>
                     </div>
                 </div>
 
-                <div class="card" style="border-color: var(--accent);">
-                    <div class="card-header">
-                        <div class="card-title">Mid-Market</div>
-                        <span class="card-badge">$2,500 + $500/MO</span>
-                    </div>
-                    <p style="color: var(--text-secondary); font-size: 13px; margin-bottom: 16px;">Multi-location or 10-50 employees. Regional dental groups, restaurant chains, multi-office law firms.</p>
-                    <div class="list-item" style="padding-top: 0;">
-                        <div class="list-content">
-                            <h4>What's Included</h4>
-                            <p>• Full workflow audit (2 hrs)<br>• 10+ automations<br>• Custom integrations<br>• Multi-location sync<br>• Priority support<br>• Quarterly reviews</p>
-                        </div>
-                    </div>
-                    <div class="list-item">
-                        <div class="list-content">
-                            <h4>Annual Value</h4>
-                            <p class="money" style="font-size: 18px;">$8,500/year</p>
-                        </div>
-                    </div>
-                    <div class="list-item" style="border-bottom: none;">
-                        <div class="list-content">
-                            <h4>Target Volume</h4>
-                            <p>2,000 installs by Month 24</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">Enterprise</div>
-                        <span class="card-badge">CUSTOM PRICING</span>
-                    </div>
-                    <p style="color: var(--text-secondary); font-size: 13px; margin-bottom: 16px;">50+ locations or franchise HQs. Hospital networks, national chains, PE-backed roll-ups.</p>
-                    <div class="list-item" style="padding-top: 0;">
-                        <div class="list-content">
-                            <h4>What's Included</h4>
-                            <p>• Enterprise audit + roadmap<br>• Unlimited automations<br>• Custom development<br>• Dedicated account manager<br>• SLA guarantees<br>• On-site training</p>
-                        </div>
-                    </div>
-                    <div class="list-item">
-                        <div class="list-content">
-                            <h4>Annual Value</h4>
-                            <p class="money" style="font-size: 18px;">$50K-500K/year</p>
-                        </div>
-                    </div>
-                    <div class="list-item" style="border-bottom: none;">
-                        <div class="list-content">
-                            <h4>Target Volume</h4>
-                            <p>100 enterprise deals by Month 24</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">Installer Licensing Model</div>
-                    <span class="card-badge">SCALE ENGINE</span>
-                </div>
-                <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 20px;">Train local technicians to become certified Tend installers. They sell, install, and support. We provide the platform, training, and leads.</p>
                 <div class="grid-2">
-                    <div>
-                        <h4 style="margin-bottom: 12px;">Installer Economics</h4>
-                        <div class="table-container"><table>
-                            <tr>
-                                <td>License fee</td>
-                                <td class="money">$5,000/year</td>
-                            </tr>
-                            <tr>
-                                <td>Revenue share (setup)</td>
-                                <td>60% to installer</td>
-                            </tr>
-                            <tr>
-                                <td>Revenue share (monthly)</td>
-                                <td>40% to installer</td>
-                            </tr>
-                            <tr>
-                                <td>Target installs/mo</td>
-                                <td>10 per installer</td>
-                            </tr>
-                            <tr>
-                                <td>Installer annual income</td>
-                                <td class="money">$120K-180K</td>
-                            </tr>
-                        </table></div>
-                    </div>
-                    <div>
-                        <h4 style="margin-bottom: 12px;">What Installers Get</h4>
-                        <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.8;">
-                            • Full training program (40 hrs)<br>
-                            • Certification + badge<br>
-                            • Lead generation support<br>
-                            • Sales materials + scripts<br>
-                            • Technical support hotline<br>
-                            • Exclusive territory (optional)<br>
-                            • Monthly installer calls
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- GTM Channels Section -->
-        <section id="channels" class="section">
-            <div class="section-header">
-                <h1 class="section-title">GTM Channels</h1>
-                <p class="section-subtitle">Multi-channel approach: Local-first for SMB, outbound for Mid-Market, strategic for Enterprise.</p>
-            </div>
-
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-label">Year 1 CAC Target</div>
-                    <div class="stat-value">$400</div>
-                    <div class="stat-change">SMB blended</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">Year 1 LTV:CAC</div>
-                    <div class="stat-value accent">7:1</div>
-                    <div class="stat-change">Target ratio</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">Marketing Budget Y1</div>
-                    <div class="stat-value">$1.2M</div>
-                    <div class="stat-change">~7% of revenue</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">Sales Team Y1</div>
-                    <div class="stat-value">8</div>
-                    <div class="stat-change">Founders + 6 reps</div>
-                </div>
-            </div>
-
-            <div class="grid-2">
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">SMB Channels</div>
-                        <span class="card-badge">60% OF VOLUME</span>
-                    </div>
-                    <div class="list-item">
-                        <div class="list-number">01</div>
-                        <div class="list-content">
-                            <h4>Local Paid Ads</h4>
-                            <p>Facebook/Instagram + Google Local Services. Geo-targeted to specific metros. "Install AI into your business" creative.</p>
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Weeks 1-4: Foundation</div>
+                            <span class="card-badge">BUILD</span>
+                        </div>
+                        <div class="timeline">
+                            <div class="timeline-item">
+                                <div class="timeline-week">Week 1</div>
+                                <div class="timeline-title">Hardware + Software Stack</div>
+                                <div class="timeline-desc">Finalize Raspberry Pi config. Test Ollama + local LLM. Build first 3 automation templates (scheduling, invoicing, follow-up).</div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-week">Week 2</div>
+                                <div class="timeline-title">First Free Install</div>
+                                <div class="timeline-desc">Install in a friendly business (dental office, restaurant). Document everything. Video the setup process.</div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-week">Week 3</div>
+                                <div class="timeline-title">Iterate + Fix</div>
+                                <div class="timeline-desc">What broke? What confused them? Fix the install process. Create FAQ. Build support playbook.</div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-week">Week 4</div>
+                                <div class="timeline-title">Package It</div>
+                                <div class="timeline-desc">Standard hardware kit. Pricing finalized. Landing page live. Sales script written. Ready to sell.</div>
+                            </div>
                         </div>
                     </div>
-                    <div class="list-item">
-                        <div class="list-number">02</div>
-                        <div class="list-content">
-                            <h4>Door-to-Door</h4>
-                            <p>Installers walk strip malls, office parks. Demo on iPad. Book install on the spot. Works for trades, salons, restaurants.</p>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Weeks 5-8: First 10</div>
+                            <span class="card-badge">SELL</span>
                         </div>
-                    </div>
-                    <div class="list-item">
-                        <div class="list-number">03</div>
-                        <div class="list-content">
-                            <h4>Referrals</h4>
-                            <p>$200 credit per referral. Happy customers tell their business friends. Dental → dental, HVAC → plumber.</p>
-                        </div>
-                    </div>
-                    <div class="list-item">
-                        <div class="list-number">04</div>
-                        <div class="list-content">
-                            <h4>Local Partnerships</h4>
-                            <p>Chamber of Commerce, BNI groups, local accountants/bookkeepers. They recommend, we install.</p>
+                        <div class="timeline">
+                            <div class="timeline-item">
+                                <div class="timeline-week">Week 5</div>
+                                <div class="timeline-title">Network Sales</div>
+                                <div class="timeline-desc">Call everyone you know who owns a business. Offer founder pricing ($250 setup). Get 3-5 installs from network.</div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-week">Week 6</div>
+                                <div class="timeline-title">Local Ads Live</div>
+                                <div class="timeline-desc">Launch Facebook + Google ads. $50/day. Target dental offices, salons, HVAC in DFW. "Install AI" messaging.</div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-week">Week 7</div>
+                                <div class="timeline-title">Door-to-Door Test</div>
+                                <div class="timeline-desc">Walk a strip mall. Pitch 20 businesses. Track conversion rate. Refine the in-person pitch.</div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-week">Week 8</div>
+                                <div class="timeline-title">10 Installs Complete</div>
+                                <div class="timeline-desc">Milestone: 10 paying customers. Collect testimonials. Document ROI (hours saved, revenue impact).</div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="card">
                     <div class="card-header">
-                        <div class="card-title">Mid-Market & Enterprise</div>
-                        <span class="card-badge">40% OF REVENUE</span>
+                        <div class="card-title">Weeks 9-12: Scale Prep</div>
+                        <span class="card-badge">SYSTEMIZE</span>
                     </div>
-                    <div class="list-item">
-                        <div class="list-number">01</div>
-                        <div class="list-content">
-                            <h4>Outbound Sales</h4>
-                            <p>SDRs target multi-location operators. LinkedIn + email sequences. "We installed AI for [competitor], saved them 200 hrs/month."</p>
+                    <div class="grid-2">
+                        <div class="timeline">
+                            <div class="timeline-item">
+                                <div class="timeline-week">Week 9</div>
+                                <div class="timeline-title">Case Study Published</div>
+                                <div class="timeline-desc">Full case study: "How [Dental Office] saves 22 hrs/week with Tend." Video testimonial. Metrics.</div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-week">Week 10</div>
+                                <div class="timeline-title">Installer Training Draft</div>
+                                <div class="timeline-desc">Document the full install process. Create training videos. Write the certification test.</div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-week">Week 11</div>
+                                <div class="timeline-title">First Installer Recruited</div>
+                                <div class="timeline-desc">Find first external installer. IT person, MSP tech, or hustle-minded salesperson. Start training.</div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-week">Week 12</div>
+                                <div class="timeline-title">25 Installs + Playbook</div>
+                                <div class="timeline-desc">25 active installs. Playbook documented. Installer #1 ready. Enterprise outreach starts.</div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="list-item">
-                        <div class="list-number">02</div>
-                        <div class="list-content">
-                            <h4>Vertical Conferences</h4>
-                            <p>Dental conferences, restaurant shows, franchise expos. Booth + speaking + demos. High-intent buyers.</p>
-                        </div>
-                    </div>
-                    <div class="list-item">
-                        <div class="list-number">03</div>
-                        <div class="list-content">
-                            <h4>PE/VC Partnerships</h4>
-                            <p>Partner with PE firms doing healthcare/services roll-ups. Become the "AI layer" they add post-acquisition.</p>
-                        </div>
-                    </div>
-                    <div class="list-item">
-                        <div class="list-number">04</div>
-                        <div class="list-content">
-                            <h4>Case Study Marketing</h4>
-                            <p>Detailed ROI case studies. "How [Dental Group] saved $400K/year with Tend." Gated content → sales call.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">Channel Budget Allocation — Year 1</div>
-                </div>
-                <div class="table-container"><table>
-                    <thead>
-                        <tr>
-                            <th>Channel</th>
-                            <th>Budget</th>
-                            <th>Expected Deals</th>
-                            <th>CAC</th>
-                            <th>Notes</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="highlight">Paid Ads (Local)</td>
-                            <td class="money">$400K</td>
-                            <td>800</td>
-                            <td class="money">$500</td>
-                            <td>FB/IG + Google LSA</td>
-                        </tr>
-                        <tr>
-                            <td class="highlight">Installer Network</td>
-                            <td class="money">$200K</td>
-                            <td>600</td>
-                            <td class="money">$333</td>
-                            <td>Training + support costs</td>
-                        </tr>
-                        <tr>
-                            <td class="highlight">Referrals</td>
-                            <td class="money">$100K</td>
-                            <td>400</td>
-                            <td class="money">$250</td>
-                            <td>$200 credit per referral</td>
-                        </tr>
-                        <tr>
-                            <td class="highlight">Outbound Sales</td>
-                            <td class="money">$300K</td>
-                            <td>50</td>
-                            <td class="money">$6,000</td>
-                            <td>Mid-market + enterprise</td>
-                        </tr>
-                        <tr>
-                            <td class="highlight">Events/Conferences</td>
-                            <td class="money">$150K</td>
-                            <td>30</td>
-                            <td class="money">$5,000</td>
-                            <td>Enterprise pipeline</td>
-                        </tr>
-                        <tr>
-                            <td class="highlight">Content/SEO</td>
-                            <td class="money">$50K</td>
-                            <td>100</td>
-                            <td class="money">$500</td>
-                            <td>Long-term inbound</td>
-                        </tr>
-                        <tr style="background: var(--bg);">
-                            <td class="highlight" style="color: var(--accent);">TOTAL</td>
-                            <td class="money" style="font-weight: 600;">$1.2M</td>
-                            <td style="font-weight: 600;">1,980</td>
-                            <td class="money" style="font-weight: 600;">$606 avg</td>
-                            <td></td>
-                        </tr>
-                    </tbody>
-                </table></div>
-            </div>
-        </section>
-
-        <!-- 90-Day Plan Section -->
-        <section id="ninety-day" class="section">
-            <div class="section-header">
-                <h1 class="section-title">90-Day Plan</h1>
-                <p class="section-subtitle">From zero to 25 installs. First vertical proven. First case study published.</p>
-            </div>
-
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-label">Day 90 Target</div>
-                    <div class="stat-value accent">25</div>
-                    <div class="stat-change">Active installs</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">Day 90 MRR</div>
-                    <div class="stat-value">$7.5K</div>
-                    <div class="stat-change">25 × $300 avg</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">First Vertical</div>
-                    <div class="stat-value">Dental</div>
-                    <div class="stat-change">Highest pain, clear ROI</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">First Market</div>
-                    <div class="stat-value">DFW</div>
-                    <div class="stat-change">Home base, network</div>
-                </div>
-            </div>
-
-            <div class="grid-2">
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">Weeks 1-4: Foundation</div>
-                        <span class="card-badge">BUILD</span>
-                    </div>
-                    <div class="timeline">
-                        <div class="timeline-item">
-                            <div class="timeline-week">Week 1</div>
-                            <div class="timeline-title">Hardware + Software Stack</div>
-                            <div class="timeline-desc">Finalize Raspberry Pi config. Test Ollama + local LLM. Build first 3 automation templates (scheduling, invoicing, follow-up).</div>
-                        </div>
-                        <div class="timeline-item">
-                            <div class="timeline-week">Week 2</div>
-                            <div class="timeline-title">First Free Install</div>
-                            <div class="timeline-desc">Install in a friendly business (dental office, restaurant). Document everything. Video the setup process.</div>
-                        </div>
-                        <div class="timeline-item">
-                            <div class="timeline-week">Week 3</div>
-                            <div class="timeline-title">Iterate + Fix</div>
-                            <div class="timeline-desc">What broke? What confused them? Fix the install process. Create FAQ. Build support playbook.</div>
-                        </div>
-                        <div class="timeline-item">
-                            <div class="timeline-week">Week 4</div>
-                            <div class="timeline-title">Package It</div>
-                            <div class="timeline-desc">Standard hardware kit. Pricing finalized. Landing page live. Sales script written. Ready to sell.</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">Weeks 5-8: First 10</div>
-                        <span class="card-badge">SELL</span>
-                    </div>
-                    <div class="timeline">
-                        <div class="timeline-item">
-                            <div class="timeline-week">Week 5</div>
-                            <div class="timeline-title">Network Sales</div>
-                            <div class="timeline-desc">Call everyone you know who owns a business. Offer founder pricing ($250 setup). Get 3-5 installs from network.</div>
-                        </div>
-                        <div class="timeline-item">
-                            <div class="timeline-week">Week 6</div>
-                            <div class="timeline-title">Local Ads Live</div>
-                            <div class="timeline-desc">Launch Facebook + Google ads. $50/day. Target dental offices, salons, HVAC in DFW. "Install AI" messaging.</div>
-                        </div>
-                        <div class="timeline-item">
-                            <div class="timeline-week">Week 7</div>
-                            <div class="timeline-title">Door-to-Door Test</div>
-                            <div class="timeline-desc">Walk a strip mall. Pitch 20 businesses. Track conversion rate. Refine the in-person pitch.</div>
-                        </div>
-                        <div class="timeline-item">
-                            <div class="timeline-week">Week 8</div>
-                            <div class="timeline-title">10 Installs Complete</div>
-                            <div class="timeline-desc">Milestone: 10 paying customers. Collect testimonials. Document ROI (hours saved, revenue impact).</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">Weeks 9-12: Scale Prep</div>
-                    <span class="card-badge">SYSTEMIZE</span>
-                </div>
-                <div class="grid-2">
-                    <div class="timeline">
-                        <div class="timeline-item">
-                            <div class="timeline-week">Week 9</div>
-                            <div class="timeline-title">Case Study Published</div>
-                            <div class="timeline-desc">Full case study: "How [Dental Office] saves 22 hrs/week with Tend." Video testimonial. Metrics.</div>
-                        </div>
-                        <div class="timeline-item">
-                            <div class="timeline-week">Week 10</div>
-                            <div class="timeline-title">Installer Training Draft</div>
-                            <div class="timeline-desc">Document the full install process. Create training videos. Write the certification test.</div>
-                        </div>
-                        <div class="timeline-item">
-                            <div class="timeline-week">Week 11</div>
-                            <div class="timeline-title">First Installer Recruited</div>
-                            <div class="timeline-desc">Find first external installer. IT person, MSP tech, or hustle-minded salesperson. Start training.</div>
-                        </div>
-                        <div class="timeline-item">
-                            <div class="timeline-week">Week 12</div>
-                            <div class="timeline-title">25 Installs + Playbook</div>
-                            <div class="timeline-desc">25 active installs. Playbook documented. Installer #1 ready. Enterprise outreach starts.</div>
-                        </div>
-                    </div>
-                    <div>
-                        <h4 style="margin-bottom: 16px;">Day 90 Deliverables</h4>
-                        <div class="code-block">
-```
-
+                        <div>
+                            <h4 style="margin-bottom: 16px;">Day 90 Deliverables</h4>
+                            <div class="code-block">
 ✓ 25 active installs ($7.5K MRR)
 ✓ 1 case study with video testimonial
 ✓ Landing page converting at 3%+
@@ -1289,544 +1191,535 @@
 ✓ Support playbook documented
 ✓ First installer trained
 ✓ First enterprise meeting booked
-</div>
-</div>
-</div>
-</div>
-</section>
-
-```
-        <!-- Sales Playbook Section -->
-        <section id="sales" class="section">
-            <div class="section-header">
-                <h1 class="section-title">Sales Playbook</h1>
-                <p class="section-subtitle">The pitch, the objections, the close. For SMB and Enterprise.</p>
-            </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">The 60-Second Pitch (SMB)</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="quote-block">
-                    <p class="quote-text">"You know how you spend hours every week on scheduling, follow-ups, and chasing invoices? We install AI that does all of that automatically. It runs in the background, 24/7. You don't prompt it, you don't open an app — it just runs. Setup is $500, then $200 a month. Takes 48 hours to install. Want to see what it would automate for your business?"</p>
-                </div>
-            </div>
+            </section>
 
-            <div class="grid-2">
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">Objection Handling</div>
-                    </div>
-                    <div class="list-item">
-                        <div class="list-content">
-                            <h4>"I can just use ChatGPT"</h4>
-                            <p>"ChatGPT waits for you to ask it something. Tend runs without you. It sends the follow-up at 8am whether you're awake or not. It's the difference between a tool and an employee."</p>
-                        </div>
-                    </div>
-                    <div class="list-item">
-                        <div class="list-content">
-                            <h4>"$200/month is expensive"</h4>
-                            <p>"How much do you pay your front desk person? Tend does 20+ hours of their work every month. That's less than $10/hour for a worker that never calls in sick."</p>
-                        </div>
-                    </div>
-                    <div class="list-item">
-                        <div class="list-content">
-                            <h4>"What if it breaks?"</h4>
-                            <p>"We monitor it 24/7. If something fails, we fix it — usually before you notice. And you can text us anytime. That's what the $200/month covers."</p>
-                        </div>
-                    </div>
-                    <div class="list-item">
-                        <div class="list-content">
-                            <h4>"I need to think about it"</h4>
-                            <p>"Totally get it. While you're thinking — how many follow-up calls are you missing today? How many invoices are sitting unpaid? Every day without Tend is revenue you're leaving on the table."</p>
-                        </div>
-                    </div>
+            <!-- Sales Playbook Section -->
+            <section id="sales" class="section">
+                <div class="section-header">
+                    <h1 class="section-title">Sales Playbook</h1>
+                    <p class="section-subtitle">The pitch, the objections, the close. For SMB and Enterprise.</p>
                 </div>
 
                 <div class="card">
                     <div class="card-header">
-                        <div class="card-title">Discovery Questions</div>
+                        <div class="card-title">The 60-Second Pitch (SMB)</div>
                     </div>
-                    <div class="list-item">
-                        <div class="list-content">
-                            <h4>Time Questions</h4>
-                            <p>• "How many hours/week do you spend on scheduling?"<br>• "Who handles follow-ups? How much time does that take?"<br>• "What's your process for chasing late payments?"</p>
-                        </div>
-                    </div>
-                    <div class="list-item">
-                        <div class="list-content">
-                            <h4>Pain Questions</h4>
-                            <p>• "What falls through the cracks most often?"<br>• "What would you do with 10 extra hours a week?"<br>• "Have you ever lost a customer because of slow response?"</p>
-                        </div>
-                    </div>
-                    <div class="list-item">
-                        <div class="list-content">
-                            <h4>Money Questions</h4>
-                            <p>• "What's your no-show rate?"<br>• "How much is sitting in unpaid invoices right now?"<br>• "What does a new customer worth to you over a year?"</p>
-                        </div>
+                    <div class="quote-block">
+                        <p class="quote-text">"You know how you spend hours every week on scheduling, follow-ups, and chasing invoices? We install AI that does all of that automatically. It runs in the background, 24/7. You don't prompt it, you don't open an app — it just runs. Setup is $500, then $200 a month. Takes 48 hours to install. Want to see what it would automate for your business?"</p>
                     </div>
                 </div>
-            </div>
 
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">Enterprise Pitch Deck Outline</div>
-                    <span class="card-badge">10 SLIDES</span>
-                </div>
-                <div class="table-container"><table>
-                    <thead>
-                        <tr>
-                            <th>Slide</th>
-                            <th>Title</th>
-                            <th>Content</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="highlight">1</td>
-                            <td>Cover</td>
-                            <td>Tend logo + "Install AI into your business"</td>
-                        </tr>
-                        <tr>
-                            <td class="highlight">2</td>
-                            <td>The Problem</td>
-                            <td>36% of work week spent on admin. Staff shortage. Rising labor costs.</td>
-                        </tr>
-                        <tr>
-                            <td class="highlight">3</td>
-                            <td>The Solution</td>
-                            <td>AI that runs your back office. Scheduling, follow-ups, invoicing, customer responses. 24/7.</td>
-                        </tr>
-                        <tr>
-                            <td class="highlight">4</td>
-                            <td>How It Works</td>
-                            <td>Audit → Install → Runs. 48-hour setup. On-premise option for security.</td>
-                        </tr>
-                        <tr>
-                            <td class="highlight">5</td>
-                            <td>Case Study</td>
-                            <td>[Dental Group] saved 200 hrs/month, reduced no-shows 78%, collected $8K in overdue invoices.</td>
-                        </tr>
-                        <tr>
-                            <td class="highlight">6</td>
-                            <td>ROI Model</td>
-                            <td>Input: locations, staff hours, no-show rate. Output: annual savings, payback period.</td>
-                        </tr>
-                        <tr>
-                            <td class="highlight">7</td>
-                            <td>Security & Compliance</td>
-                            <td>On-premise option. HIPAA-ready. SOC 2 in progress. Data stays local.</td>
-                        </tr>
-                        <tr>
-                            <td class="highlight">8</td>
-                            <td>Implementation</td>
-                            <td>Phase 1: Pilot (2 locations, 30 days). Phase 2: Rollout. Phase 3: Optimization.</td>
-                        </tr>
-                        <tr>
-                            <td class="highlight">9</td>
-                            <td>Pricing</td>
-                            <td>Custom based on locations + scope. Typical: $50-100K/year for 20+ locations.</td>
-                        </tr>
-                        <tr>
-                            <td class="highlight">10</td>
-                            <td>Next Steps</td>
-                            <td>Pilot proposal. 2 locations, 30 days, $10K. Prove ROI before full rollout.</td>
-                        </tr>
-                    </tbody>
-                </table></div>
-            </div>
-        </section>
-
-        <!-- Ad Creative Section -->
-        <section id="ad-creative" class="section">
-            <div class="section-header">
-                <h1 class="section-title">Ad Creative</h1>
-                <p class="section-subtitle">Data-backed pain points, angles, and scripts for paid acquisition.</p>
-            </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">Pain Point Data (Use in Ads)</div>
-                    <span class="card-badge">RESEARCHED</span>
-                </div>
-                <div class="table-container"><table>
-                    <thead>
-                        <tr>
-                            <th>Statistic</th>
-                            <th>Source</th>
-                            <th>Ad Hook</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>36% of work week spent on admin tasks</td>
-                            <td>Time etc</td>
-                            <td class="highlight">"1/3 of your week is wasted"</td>
-                        </tr>
-                        <tr>
-                            <td>43% of entrepreneurs do data entry weekly</td>
-                            <td>Time etc</td>
-                            <td class="highlight">"Still doing data entry in 2026?"</td>
-                        </tr>
-                        <tr>
-                            <td>33% of small business owners work 50+ hrs</td>
-                            <td>SCORE</td>
-                            <td class="highlight">"Working weekends? There's a reason."</td>
-                        </tr>
-                        <tr>
-                            <td>Average no-show rate: 15-20%</td>
-                            <td>Industry avg</td>
-                            <td class="highlight">"Every no-show costs you $150"</td>
-                        </tr>
-                        <tr>
-                            <td>40% of leads lost to slow follow-up</td>
-                            <td>HBR</td>
-                            <td class="highlight">"Your competitor responded first"</td>
-                        </tr>
-                    </tbody>
-                </table></div>
-            </div>
-
-            <div class="grid-2">
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">5 Ad Angles</div>
-                    </div>
-                    <div class="list-item">
-                        <div class="list-number">01</div>
-                        <div class="list-content">
-                            <h4>The Time Theft Angle</h4>
-                            <p>Hook: "You're losing 15 hours a week to admin. Here's how to get it back."</p>
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Objection Handling</div>
+                        </div>
+                        <div class="list-item">
+                            <div class="list-content">
+                                <h4>"I can just use ChatGPT"</h4>
+                                <p>"ChatGPT waits for you to ask it something. Tend runs without you. It sends the follow-up at 8am whether you're awake or not. It's the difference between a tool and an employee."</p>
+                            </div>
+                        </div>
+                        <div class="list-item">
+                            <div class="list-content">
+                                <h4>"$200/month is expensive"</h4>
+                                <p>"How much do you pay your front desk person? Tend does 20+ hours of their work every month. That's less than $10/hour for a worker that never calls in sick."</p>
+                            </div>
+                        </div>
+                        <div class="list-item">
+                            <div class="list-content">
+                                <h4>"What if it breaks?"</h4>
+                                <p>"We monitor it 24/7. If something fails, we fix it — usually before you notice. And you can text us anytime. That's what the $200/month covers."</p>
+                            </div>
+                        </div>
+                        <div class="list-item">
+                            <div class="list-content">
+                                <h4>"I need to think about it"</h4>
+                                <p>"Totally get it. While you're thinking — how many follow-up calls are you missing today? How many invoices are sitting unpaid? Every day without Tend is revenue you're leaving on the table."</p>
+                            </div>
                         </div>
                     </div>
-                    <div class="list-item">
-                        <div class="list-number">02</div>
-                        <div class="list-content">
-                            <h4>The Competitor Speed Angle</h4>
-                            <p>Hook: "The business that responds first wins. Are you responding in 60 seconds?"</p>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Discovery Questions</div>
                         </div>
-                    </div>
-                    <div class="list-item">
-                        <div class="list-number">03</div>
-                        <div class="list-content">
-                            <h4>The No-Show Angle</h4>
-                            <p>Hook: "Every no-show costs you $150. What if you could cut them by 78%?"</p>
+                        <div class="list-item">
+                            <div class="list-content">
+                                <h4>Time Questions</h4>
+                                <p>• "How many hours/week do you spend on scheduling?"<br>• "Who handles follow-ups? How much time does that take?"<br>• "What's your process for chasing late payments?"</p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="list-item">
-                        <div class="list-number">04</div>
-                        <div class="list-content">
-                            <h4>The Overworked Founder Angle</h4>
-                            <p>Hook: "You didn't start a business to do data entry at midnight."</p>
+                        <div class="list-item">
+                            <div class="list-content">
+                                <h4>Pain Questions</h4>
+                                <p>• "What falls through the cracks most often?"<br>• "What would you do with 10 extra hours a week?"<br>• "Have you ever lost a customer because of slow response?"</p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="list-item">
-                        <div class="list-number">05</div>
-                        <div class="list-content">
-                            <h4>The AI Employee Angle</h4>
-                            <p>Hook: "What if you could hire someone who works 24/7 for $200/month?"</p>
+                        <div class="list-item">
+                            <div class="list-content">
+                                <h4>Money Questions</h4>
+                                <p>• "What's your no-show rate?"<br>• "How much is sitting in unpaid invoices right now?"<br>• "What does a new customer worth to you over a year?"</p>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="card">
                     <div class="card-header">
-                        <div class="card-title">Video Script (60s)</div>
-                        <span class="card-badge">TIME THEFT</span>
+                        <div class="card-title">Enterprise Pitch Deck Outline</div>
+                        <span class="card-badge">10 SLIDES</span>
                     </div>
-                    <div class="code-block" style="white-space: pre-wrap;">
-```
-
-[0-5s] HOOK
-“You’re losing 15 hours a week and you don’t even know it.”
-
-[5-15s] PROBLEM
-“Scheduling. Follow-ups. Invoices. Chasing payments. It adds up. And while you’re buried in admin, your competitors are closing deals.”
-
-[15-25s] SOLUTION
-“What if all of that just… happened? Automatically. In the background. Whether you’re working or not.”
-
-[25-40s] PRODUCT
-“Tend is AI that runs your back office. We install it into your business. It handles scheduling, follow-ups, invoicing, customer questions. 24/7. You don’t prompt it. You don’t open an app. It just runs.”
-
-[40-50s] PROOF
-“One dental office saved 22 hours a week. Cut no-shows by 78%. Collected $8K in overdue invoices in the first month.”
-
-[50-60s] CTA
-“$500 to install. $200 a month to run. Setup takes 48 hours. Go to tend.team and get your time back.”
-</div>
-</div>
-</div>
-
-```
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">Creative Mix Recommendation</div>
-                </div>
-                <div class="table-container"><table>
-                    <thead>
-                        <tr>
-                            <th>Format</th>
-                            <th>Angle</th>
-                            <th>Platform</th>
-                            <th>Budget %</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="highlight">Video 60s</td>
-                            <td>Time Theft</td>
-                            <td>Facebook/Instagram</td>
-                            <td>30%</td>
-                        </tr>
-                        <tr>
-                            <td class="highlight">Video 60s</td>
-                            <td>Overworked Founder</td>
-                            <td>Facebook/Instagram</td>
-                            <td>20%</td>
-                        </tr>
-                        <tr>
-                            <td class="highlight">Static Image</td>
-                            <td>"36% stat" visual</td>
-                            <td>Facebook/Instagram</td>
-                            <td>15%</td>
-                        </tr>
-                        <tr>
-                            <td class="highlight">Carousel</td>
-                            <td>"5 signs you need Tend"</td>
-                            <td>Facebook/Instagram</td>
-                            <td>10%</td>
-                        </tr>
-                        <tr>
-                            <td class="highlight">Google LSA</td>
-                            <td>Local Services</td>
-                            <td>Google</td>
-                            <td>15%</td>
-                        </tr>
-                        <tr>
-                            <td class="highlight">Video 30s</td>
-                            <td>Retargeting</td>
-                            <td>Facebook/Instagram</td>
-                            <td>10%</td>
-                        </tr>
-                    </tbody>
-                </table></div>
-            </div>
-        </section>
-
-        <!-- Metrics Section -->
-        <section id="metrics" class="section">
-            <div class="section-header">
-                <h1 class="section-title">KPIs & Targets</h1>
-                <p class="section-subtitle">The numbers that matter. Track weekly.</p>
-            </div>
-
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-label">Target LTV</div>
-                    <div class="stat-value accent">$4,800</div>
-                    <div class="stat-change">24-month average</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">Target CAC</div>
-                    <div class="stat-value">$500</div>
-                    <div class="stat-change">SMB blended</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">Target LTV:CAC</div>
-                    <div class="stat-value accent">10:1</div>
-                    <div class="stat-change">Best-in-class SaaS</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-label">Target Churn</div>
-                    <div class="stat-value">&lt;5%</div>
-                    <div class="stat-change">Monthly</div>
-                </div>
-            </div>
-
-            <div class="grid-2">
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">Weekly KPIs</div>
-                    </div>
-                    <div class="table-container"><table>
+                    <table>
                         <thead>
                             <tr>
-                                <th>Metric</th>
-                                <th>Week 1</th>
-                                <th>Month 3</th>
-                                <th>Month 12</th>
+                                <th>Slide</th>
+                                <th>Title</th>
+                                <th>Content</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td class="highlight">Leads Generated</td>
-                                <td>20</td>
-                                <td>100</td>
-                                <td>500</td>
+                                <td class="highlight">1</td>
+                                <td>Cover</td>
+                                <td>Tend logo + "Install AI into your business"</td>
                             </tr>
                             <tr>
-                                <td class="highlight">Demos Booked</td>
-                                <td>5</td>
-                                <td>30</td>
-                                <td>150</td>
+                                <td class="highlight">2</td>
+                                <td>The Problem</td>
+                                <td>36% of work week spent on admin. Staff shortage. Rising labor costs.</td>
                             </tr>
                             <tr>
-                                <td class="highlight">Installs Completed</td>
-                                <td>2</td>
-                                <td>10</td>
-                                <td>50</td>
+                                <td class="highlight">3</td>
+                                <td>The Solution</td>
+                                <td>AI that runs your back office. Scheduling, follow-ups, invoicing, customer responses. 24/7.</td>
                             </tr>
                             <tr>
-                                <td class="highlight">MRR Added</td>
-                                <td class="money">$600</td>
-                                <td class="money">$3K</td>
-                                <td class="money">$15K</td>
+                                <td class="highlight">4</td>
+                                <td>How It Works</td>
+                                <td>Audit → Install → Runs. 48-hour setup. On-premise option for security.</td>
                             </tr>
                             <tr>
-                                <td class="highlight">Churn (customers)</td>
-                                <td>0</td>
-                                <td>1</td>
-                                <td>5</td>
+                                <td class="highlight">5</td>
+                                <td>Case Study</td>
+                                <td>[Dental Group] saved 200 hrs/month, reduced no-shows 78%, collected $8K in overdue invoices.</td>
+                            </tr>
+                            <tr>
+                                <td class="highlight">6</td>
+                                <td>ROI Model</td>
+                                <td>Input: locations, staff hours, no-show rate. Output: annual savings, payback period.</td>
+                            </tr>
+                            <tr>
+                                <td class="highlight">7</td>
+                                <td>Security & Compliance</td>
+                                <td>On-premise option. HIPAA-ready. SOC 2 in progress. Data stays local.</td>
+                            </tr>
+                            <tr>
+                                <td class="highlight">8</td>
+                                <td>Implementation</td>
+                                <td>Phase 1: Pilot (2 locations, 30 days). Phase 2: Rollout. Phase 3: Optimization.</td>
+                            </tr>
+                            <tr>
+                                <td class="highlight">9</td>
+                                <td>Pricing</td>
+                                <td>Custom based on locations + scope. Typical: $50-100K/year for 20+ locations.</td>
+                            </tr>
+                            <tr>
+                                <td class="highlight">10</td>
+                                <td>Next Steps</td>
+                                <td>Pilot proposal. 2 locations, 30 days, $10K. Prove ROI before full rollout.</td>
                             </tr>
                         </tbody>
-                    </table></div>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Ad Creative Section -->
+            <section id="ad-creative" class="section">
+                <div class="section-header">
+                    <h1 class="section-title">Ad Creative</h1>
+                    <p class="section-subtitle">Data-backed pain points, angles, and scripts for paid acquisition.</p>
                 </div>
 
                 <div class="card">
                     <div class="card-header">
-                        <div class="card-title">Conversion Funnel Targets</div>
+                        <div class="card-title">Pain Point Data (Use in Ads)</div>
+                        <span class="card-badge">RESEARCHED</span>
                     </div>
-                    <div class="funnel">
-                        <div class="funnel-stage">
-                            <div class="funnel-bar" style="width: 100%;">Visitors</div>
-                            <div class="funnel-value">10,000</div>
-                        </div>
-                        <div class="funnel-stage">
-                            <div class="funnel-bar" style="width: 50%;">Leads (5%)</div>
-                            <div class="funnel-value">500</div>
-                        </div>
-                        <div class="funnel-stage">
-                            <div class="funnel-bar" style="width: 30%;">Demos (60%)</div>
-                            <div class="funnel-value">300</div>
-                        </div>
-                        <div class="funnel-stage">
-                            <div class="funnel-bar" style="width: 15%;">Installs (50%)</div>
-                            <div class="funnel-value">150</div>
-                        </div>
-                    </div>
-                    <p style="font-size: 12px; color: var(--text-muted); margin-top: 16px;">Monthly targets at Month 6. Adjust based on actual conversion rates.</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Statistic</th>
+                                <th>Source</th>
+                                <th>Ad Hook</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>36% of work week spent on admin tasks</td>
+                                <td>Time etc</td>
+                                <td class="highlight">"1/3 of your week is wasted"</td>
+                            </tr>
+                            <tr>
+                                <td>43% of entrepreneurs do data entry weekly</td>
+                                <td>Time etc</td>
+                                <td class="highlight">"Still doing data entry in 2026?"</td>
+                            </tr>
+                            <tr>
+                                <td>33% of small business owners work 50+ hrs</td>
+                                <td>SCORE</td>
+                                <td class="highlight">"Working weekends? There's a reason."</td>
+                            </tr>
+                            <tr>
+                                <td>Average no-show rate: 15-20%</td>
+                                <td>Industry avg</td>
+                                <td class="highlight">"Every no-show costs you $150"</td>
+                            </tr>
+                            <tr>
+                                <td>40% of leads lost to slow follow-up</td>
+                                <td>HBR</td>
+                                <td class="highlight">"Your competitor responded first"</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-            </div>
 
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">Unit Economics by Tier</div>
-                </div>
-                <div class="table-container"><table>
-                    <thead>
-                        <tr>
-                            <th>Tier</th>
-                            <th>Setup Fee</th>
-                            <th>Monthly</th>
-                            <th>LTV (24mo)</th>
-                            <th>CAC Target</th>
-                            <th>LTV:CAC</th>
-                            <th>Payback</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="highlight">SMB</td>
-                            <td class="money">$500</td>
-                            <td class="money">$200</td>
-                            <td class="money">$5,300</td>
-                            <td class="money">$500</td>
-                            <td class="tag tag-green">10.6x</td>
-                            <td>< 1 month</td>
-                        </tr>
-                        <tr>
-                            <td class="highlight">Mid-Market</td>
-                            <td class="money">$2,500</td>
-                            <td class="money">$500</td>
-                            <td class="money">$14,500</td>
-                            <td class="money">$2,000</td>
-                            <td class="tag tag-green">7.3x</td>
-                            <td>< 1 month</td>
-                        </tr>
-                        <tr>
-                            <td class="highlight">Enterprise</td>
-                            <td class="money">$25K avg</td>
-                            <td class="money">$5K avg</td>
-                            <td class="money">$145K</td>
-                            <td class="money">$15K</td>
-                            <td class="tag tag-green">9.7x</td>
-                            <td>< 3 months</td>
-                        </tr>
-                    </tbody>
-                </table></div>
-            </div>
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">5 Ad Angles</div>
+                        </div>
+                        <div class="list-item">
+                            <div class="list-number">01</div>
+                            <div class="list-content">
+                                <h4>The Time Theft Angle</h4>
+                                <p>Hook: "You're losing 15 hours a week to admin. Here's how to get it back."</p>
+                            </div>
+                        </div>
+                        <div class="list-item">
+                            <div class="list-number">02</div>
+                            <div class="list-content">
+                                <h4>The Competitor Speed Angle</h4>
+                                <p>Hook: "The business that responds first wins. Are you responding in 60 seconds?"</p>
+                            </div>
+                        </div>
+                        <div class="list-item">
+                            <div class="list-number">03</div>
+                            <div class="list-content">
+                                <h4>The No-Show Angle</h4>
+                                <p>Hook: "Every no-show costs you $150. What if you could cut them by 78%?"</p>
+                            </div>
+                        </div>
+                        <div class="list-item">
+                            <div class="list-number">04</div>
+                            <div class="list-content">
+                                <h4>The Overworked Founder Angle</h4>
+                                <p>Hook: "You didn't start a business to do data entry at midnight."</p>
+                            </div>
+                        </div>
+                        <div class="list-item">
+                            <div class="list-number">05</div>
+                            <div class="list-content">
+                                <h4>The AI Employee Angle</h4>
+                                <p>Hook: "What if you could hire someone who works 24/7 for $200/month?"</p>
+                            </div>
+                        </div>
+                    </div>
 
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">Health Metrics to Watch</div>
-                </div>
-                <div class="grid-3">
-                    <div>
-                        <h4 style="color: var(--accent); margin-bottom: 12px;">🟢 Green (Healthy)</h4>
-                        <p style="font-size: 13px; color: var(--text-secondary);">
-                            • CAC < $500<br>
-                            • Monthly churn < 3%<br>
-                            • Demo → Install > 50%<br>
-                            • NPS > 50<br>
-                            • Support tickets < 2/customer/mo
-                        </p>
-                    </div>
-                    <div>
-                        <h4 style="color: var(--yellow); margin-bottom: 12px;">🟡 Yellow (Watch)</h4>
-                        <p style="font-size: 13px; color: var(--text-secondary);">
-                            • CAC $500-800<br>
-                            • Monthly churn 3-5%<br>
-                            • Demo → Install 30-50%<br>
-                            • NPS 30-50<br>
-                            • Support tickets 2-4/customer/mo
-                        </p>
-                    </div>
-                    <div>
-                        <h4 style="color: var(--red); margin-bottom: 12px;">🔴 Red (Problem)</h4>
-                        <p style="font-size: 13px; color: var(--text-secondary);">
-                            • CAC > $800<br>
-                            • Monthly churn > 5%<br>
-                            • Demo → Install < 30%<br>
-                            • NPS < 30<br>
-                            • Support tickets > 4/customer/mo
-                        </p>
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Video Script (60s)</div>
+                            <span class="card-badge">TIME THEFT</span>
+                        </div>
+                        <div class="code-block" style="white-space: pre-wrap;">
+[0-5s] HOOK
+"You're losing 15 hours a week and you don't even know it."
+
+[5-15s] PROBLEM
+"Scheduling. Follow-ups. Invoices. Chasing payments. It adds up. And while you're buried in admin, your competitors are closing deals."
+
+[15-25s] SOLUTION
+"What if all of that just... happened? Automatically. In the background. Whether you're working or not."
+
+[25-40s] PRODUCT
+"Tend is AI that runs your back office. We install it into your business. It handles scheduling, follow-ups, invoicing, customer questions. 24/7. You don't prompt it. You don't open an app. It just runs."
+
+[40-50s] PROOF
+"One dental office saved 22 hours a week. Cut no-shows by 78%. Collected $8K in overdue invoices in the first month."
+
+[50-60s] CTA
+"$500 to install. $200 a month to run. Setup takes 48 hours. Go to tend.team and get your time back."
+                        </div>
                     </div>
                 </div>
-            </div>
-        </section>
-    </main>
-</div>
 
-<script>
-    // Navigation
-    document.querySelectorAll('.nav-item').forEach(item => {
-        item.addEventListener('click', function() {
-            // Update active nav
-            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-            this.classList.add('active');
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Creative Mix Recommendation</div>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Format</th>
+                                <th>Angle</th>
+                                <th>Platform</th>
+                                <th>Budget %</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="highlight">Video 60s</td>
+                                <td>Time Theft</td>
+                                <td>Facebook/Instagram</td>
+                                <td>30%</td>
+                            </tr>
+                            <tr>
+                                <td class="highlight">Video 60s</td>
+                                <td>Overworked Founder</td>
+                                <td>Facebook/Instagram</td>
+                                <td>20%</td>
+                            </tr>
+                            <tr>
+                                <td class="highlight">Static Image</td>
+                                <td>"36% stat" visual</td>
+                                <td>Facebook/Instagram</td>
+                                <td>15%</td>
+                            </tr>
+                            <tr>
+                                <td class="highlight">Carousel</td>
+                                <td>"5 signs you need Tend"</td>
+                                <td>Facebook/Instagram</td>
+                                <td>10%</td>
+                            </tr>
+                            <tr>
+                                <td class="highlight">Google LSA</td>
+                                <td>Local Services</td>
+                                <td>Google</td>
+                                <td>15%</td>
+                            </tr>
+                            <tr>
+                                <td class="highlight">Video 30s</td>
+                                <td>Retargeting</td>
+                                <td>Facebook/Instagram</td>
+                                <td>10%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
 
-            // Show section
-            const sectionId = this.dataset.section;
-            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            document.getElementById(sectionId).classList.add('active');
+            <!-- Metrics Section -->
+            <section id="metrics" class="section">
+                <div class="section-header">
+                    <h1 class="section-title">KPIs & Targets</h1>
+                    <p class="section-subtitle">The numbers that matter. Track weekly.</p>
+                </div>
 
-            // Scroll to top
-            window.scrollTo(0, 0);
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Target LTV</div>
+                        <div class="stat-value accent">$4,800</div>
+                        <div class="stat-change">24-month average</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Target CAC</div>
+                        <div class="stat-value">$500</div>
+                        <div class="stat-change">SMB blended</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Target LTV:CAC</div>
+                        <div class="stat-value accent">10:1</div>
+                        <div class="stat-change">Best-in-class SaaS</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Target Churn</div>
+                        <div class="stat-value">&lt;5%</div>
+                        <div class="stat-change">Monthly</div>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Weekly KPIs</div>
+                        </div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Metric</th>
+                                    <th>Week 1</th>
+                                    <th>Month 3</th>
+                                    <th>Month 12</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="highlight">Leads Generated</td>
+                                    <td>20</td>
+                                    <td>100</td>
+                                    <td>500</td>
+                                </tr>
+                                <tr>
+                                    <td class="highlight">Demos Booked</td>
+                                    <td>5</td>
+                                    <td>30</td>
+                                    <td>150</td>
+                                </tr>
+                                <tr>
+                                    <td class="highlight">Installs Completed</td>
+                                    <td>2</td>
+                                    <td>10</td>
+                                    <td>50</td>
+                                </tr>
+                                <tr>
+                                    <td class="highlight">MRR Added</td>
+                                    <td class="money">$600</td>
+                                    <td class="money">$3K</td>
+                                    <td class="money">$15K</td>
+                                </tr>
+                                <tr>
+                                    <td class="highlight">Churn (customers)</td>
+                                    <td>0</td>
+                                    <td>1</td>
+                                    <td>5</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Conversion Funnel Targets</div>
+                        </div>
+                        <div class="funnel">
+                            <div class="funnel-stage">
+                                <div class="funnel-bar" style="width: 100%;">Visitors</div>
+                                <div class="funnel-value">10,000</div>
+                            </div>
+                            <div class="funnel-stage">
+                                <div class="funnel-bar" style="width: 50%;">Leads (5%)</div>
+                                <div class="funnel-value">500</div>
+                            </div>
+                            <div class="funnel-stage">
+                                <div class="funnel-bar" style="width: 30%;">Demos (60%)</div>
+                                <div class="funnel-value">300</div>
+                            </div>
+                            <div class="funnel-stage">
+                                <div class="funnel-bar" style="width: 15%;">Installs (50%)</div>
+                                <div class="funnel-value">150</div>
+                            </div>
+                        </div>
+                        <p style="font-size: 12px; color: var(--text-muted); margin-top: 16px;">Monthly targets at Month 6. Adjust based on actual conversion rates.</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Unit Economics by Tier</div>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Tier</th>
+                                <th>Setup Fee</th>
+                                <th>Monthly</th>
+                                <th>LTV (24mo)</th>
+                                <th>CAC Target</th>
+                                <th>LTV:CAC</th>
+                                <th>Payback</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="highlight">SMB</td>
+                                <td class="money">$500</td>
+                                <td class="money">$200</td>
+                                <td class="money">$5,300</td>
+                                <td class="money">$500</td>
+                                <td class="tag tag-green">10.6x</td>
+                                <td>< 1 month</td>
+                            </tr>
+                            <tr>
+                                <td class="highlight">Mid-Market</td>
+                                <td class="money">$2,500</td>
+                                <td class="money">$500</td>
+                                <td class="money">$14,500</td>
+                                <td class="money">$2,000</td>
+                                <td class="tag tag-green">7.3x</td>
+                                <td>< 1 month</td>
+                            </tr>
+                            <tr>
+                                <td class="highlight">Enterprise</td>
+                                <td class="money">$25K avg</td>
+                                <td class="money">$5K avg</td>
+                                <td class="money">$145K</td>
+                                <td class="money">$15K</td>
+                                <td class="tag tag-green">9.7x</td>
+                                <td>< 3 months</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Health Metrics to Watch</div>
+                    </div>
+                    <div class="grid-3">
+                        <div>
+                            <h4 style="color: var(--accent); margin-bottom: 12px;">🟢 Green (Healthy)</h4>
+                            <p style="font-size: 13px; color: var(--text-secondary);">
+                                • CAC < $500<br>
+                                • Monthly churn < 3%<br>
+                                • Demo → Install > 50%<br>
+                                • NPS > 50<br>
+                                • Support tickets < 2/customer/mo
+                            </p>
+                        </div>
+                        <div>
+                            <h4 style="color: var(--yellow); margin-bottom: 12px;">🟡 Yellow (Watch)</h4>
+                            <p style="font-size: 13px; color: var(--text-secondary);">
+                                • CAC $500-800<br>
+                                • Monthly churn 3-5%<br>
+                                • Demo → Install 30-50%<br>
+                                • NPS 30-50<br>
+                                • Support tickets 2-4/customer/mo
+                            </p>
+                        </div>
+                        <div>
+                            <h4 style="color: var(--red); margin-bottom: 12px;">🔴 Red (Problem)</h4>
+                            <p style="font-size: 13px; color: var(--text-secondary);">
+                                • CAC > $800<br>
+                                • Monthly churn > 5%<br>
+                                • Demo → Install < 30%<br>
+                                • NPS < 30<br>
+                                • Support tickets > 4/customer/mo
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // Navigation
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                // Update active nav
+                document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+
+                // Show section
+                const sectionId = this.dataset.section;
+                document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+                document.getElementById(sectionId).classList.add('active');
+            });
         });
-    });
-</script>
-```
-
+    </script>
 </body>
 </html>
